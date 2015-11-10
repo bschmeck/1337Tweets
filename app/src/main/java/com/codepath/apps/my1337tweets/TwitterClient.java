@@ -30,7 +30,9 @@ public class TwitterClient extends OAuthBaseClient {
 
     public static final int TWEET_COUNT = 25;
 
-	public TwitterClient(Context context) {
+    private long oldestSeenTweetId = Long.MAX_VALUE;
+
+    public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
@@ -49,17 +51,29 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count", TWEET_COUNT);
 		params.put("since_id", 1);
-		getClient().get(apiUrl, params, handler);
+        if (oldestSeenTweetIdIsSet()) {
+            params.put("max_id", oldestSeenTweetId - 1);
+        }
+        getClient().get(apiUrl, params, handler);
 	}
 
-    public boolean extendHomeTimeline(long oldest_id, AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("statuses/home_timeline.json");
-        RequestParams params = new RequestParams();
-        params.put("count", TWEET_COUNT);
-        params.put("max_id", oldest_id - 1);
-        getClient().get(apiUrl, params, handler);
+    public boolean oldestSeenTweetIdIsSet() { return oldestSeenTweetId  != Long.MAX_VALUE; }
 
-        return true;
+    public void sendTweet(String tweetBody, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", tweetBody);
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void seenTweetId(long tweetId) {
+        if (tweetId < oldestSeenTweetId) {
+            oldestSeenTweetId = tweetId;
+        }
+    }
+
+    public void clearSeenTweets() {
+        oldestSeenTweetId = Long.MAX_VALUE;
     }
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

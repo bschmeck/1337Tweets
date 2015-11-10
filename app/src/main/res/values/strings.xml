@@ -6,6 +6,8 @@
     <string name="title_activity_timeline">TimelineActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="action_logout">Log Out</string>
+    <string name="title_activity_compose">What\'s Going On...</string>
     <string name="action_settings">Settings</string>
 
 </resources>
