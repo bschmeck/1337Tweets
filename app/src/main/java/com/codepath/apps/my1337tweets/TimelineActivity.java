@@ -2,6 +2,7 @@ package com.codepath.apps.my1337tweets;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimelineActivity extends AppCompatActivity {
+    private SwipeRefreshLayout swipeContainer;
 
     private static final int COMPOSE_REQUEST_CODE = 50;
     private TwitterClient client;
@@ -31,6 +33,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(this, tweets);
@@ -43,6 +46,20 @@ public class TimelineActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        swipeContainer = (SwipeRefreshLayout)findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTimeline();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         populateTimeline();
     }
 
@@ -64,6 +81,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.clearSeenTweets();
         aTweets.clear();
         populateTimeline();
+        swipeContainer.setRefreshing(false);
     }
 
     @Override

@@ -3,7 +3,7 @@
 
     <string name="app_name">1337 Tweets</string>
     <string name="login_label">Connect To Twitter</string>
-    <string name="title_activity_timeline">TimelineActivity</string>
+    <string name="title_activity_timeline">1337Tweets</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_logout">Log Out</string>
