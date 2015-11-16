@@ -11,9 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.my1337tweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.my1337tweets.fragments.MentionsTimelineFragment;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -63,21 +68,22 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == COMPOSE_REQUEST_CODE && resultCode == RESULT_OK) {
-//            String tweetBody = data.getStringExtra("tweetBody");
-//            client.sendTweet(tweetBody, new JsonHttpResponseHandler() {
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                    //refreshTimeline();
-//                    Toast.makeText(TimelineActivity.this, "Tweet Sent", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                    super.onFailure(statusCode, headers, throwable, errorResponse);
-//                }
-//            });
-//        }
+        if (requestCode == COMPOSE_REQUEST_CODE && resultCode == RESULT_OK) {
+            String tweetBody = data.getStringExtra("tweetBody");
+            TwitterClient client = TwitterApplication.getRestClient();
+            client.sendTweet(tweetBody, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    //refreshTimeline();
+                    Toast.makeText(TimelineActivity.this, "Tweet Sent", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+            });
+        }
     }
 
     public class TweetsPagerAdapter extends FragmentPagerAdapter{
