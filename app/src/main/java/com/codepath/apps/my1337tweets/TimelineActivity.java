@@ -1,10 +1,19 @@
 package com.codepath.apps.my1337tweets;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.codepath.apps.my1337tweets.fragments.HomeTimelineFragment;
+import com.codepath.apps.my1337tweets.fragments.MentionsTimelineFragment;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -14,6 +23,11 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), TimelineActivity.this));
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -61,5 +75,34 @@ public class TimelineActivity extends AppCompatActivity {
 //                }
 //            });
 //        }
+    }
+
+    public class TweetsPagerAdapter extends FragmentPagerAdapter{
+        private String tabTitles[] = { "Home", "Mentions" };
+        private Context context;
+
+        public TweetsPagerAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            this.context = context;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new HomeTimelineFragment();
+            } else {
+                return new MentionsTimelineFragment();
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
+        @Override
+        public int getCount() {
+            return tabTitles.length;
+        }
     }
 }
