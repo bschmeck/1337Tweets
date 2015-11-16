@@ -23,6 +23,7 @@ import org.json.JSONObject;
 public class TimelineActivity extends AppCompatActivity {
 
     private static final int COMPOSE_REQUEST_CODE = 50;
+    private TwitterClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class TimelineActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        client = TwitterApplication.getRestClient();
     }
 
     @Override
@@ -51,7 +54,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-        //    client.clearAccessToken();
+            client.clearAccessToken();
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             return true;
@@ -70,7 +73,6 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == COMPOSE_REQUEST_CODE && resultCode == RESULT_OK) {
             String tweetBody = data.getStringExtra("tweetBody");
-            TwitterClient client = TwitterApplication.getRestClient();
             client.sendTweet(tweetBody, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
