@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:paddingRight="4dp"/>
+        android:paddingRight="4dp" />
 
     <TextView
         android:layout_width="wrap_content"

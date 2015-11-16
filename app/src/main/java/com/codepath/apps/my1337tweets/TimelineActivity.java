@@ -53,6 +53,9 @@ public class TimelineActivity extends AppCompatActivity {
         } else if (id == R.id.action_compose) {
             Intent i = new Intent(this, ComposeActivity.class);
             startActivityForResult(i, COMPOSE_REQUEST_CODE);
+        } else if (id == R.id.action_profile) {
+            Intent i = new Intent(this, ProfileActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

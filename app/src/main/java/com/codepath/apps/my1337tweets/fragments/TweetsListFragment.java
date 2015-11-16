@@ -39,7 +39,6 @@ public class TweetsListFragment extends Fragment {
 
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(getActivity(), tweets);
-
     }
 
     public void clearTweets() {

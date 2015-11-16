@@ -1,6 +1,7 @@
 package com.codepath.apps.my1337tweets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -40,6 +41,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Tweet tweet = (Tweet) v.getTag();
+                    Intent i = new Intent(getContext(), ProfileActivity.class);
+                    i.putExtra("user", tweet.getUser());
+                    getContext().startActivity(i);
+                }
+            });
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
             viewHolder.tvTimestamp = (TextView) convertView.findViewById(R.id.tvTimestamp);
@@ -50,6 +60,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvUsername.setText(tweet.getUser().getName());
         viewHolder.tvBody.setText(Html.fromHtml(tweet.getBody()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
+        viewHolder.ivProfileImage.setTag(tweet);
         viewHolder.tvTimestamp.setText(relativeTime(tweet.getCreatedAt()));
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.ivProfileImage);
 
