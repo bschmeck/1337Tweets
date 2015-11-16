@@ -2,7 +2,6 @@ package com.codepath.apps.my1337tweets.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.codepath.apps.my1337tweets.TwitterApplication;
 import com.codepath.apps.my1337tweets.TwitterClient;
@@ -20,7 +19,6 @@ import java.util.List;
  */
 public class MentionsTimelineFragment extends TweetsListFragment {
     private TwitterClient client;
-    private SwipeRefreshLayout swipeContainer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
