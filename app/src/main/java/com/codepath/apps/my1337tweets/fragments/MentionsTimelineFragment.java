@@ -51,4 +51,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         }
         // aTweets.notifyDataSetChanged();
     }
+
+    protected void refreshTimeline() {}
 }

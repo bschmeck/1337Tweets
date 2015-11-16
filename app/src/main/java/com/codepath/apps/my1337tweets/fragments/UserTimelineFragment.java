@@ -60,4 +60,6 @@ public class UserTimelineFragment extends TweetsListFragment {
         }
         // aTweets.notifyDataSetChanged();
     }
+
+    protected void refreshTimeline() {}
 }

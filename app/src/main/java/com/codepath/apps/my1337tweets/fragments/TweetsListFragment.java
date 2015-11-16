@@ -3,6 +3,7 @@ package com.codepath.apps.my1337tweets.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import java.util.ArrayList;
 /**
  * Created by bschmeckpeper on 11/15/15.
  */
-public class TweetsListFragment extends Fragment {
+public abstract class TweetsListFragment extends Fragment {
     private TweetsArrayAdapter aTweets;
     private ArrayList<Tweet> tweets;
     protected ListView lvTweets;
+    private SwipeRefreshLayout swipeContainer;
 
     @Nullable
     @Override
@@ -29,6 +31,20 @@ public class TweetsListFragment extends Fragment {
 
         lvTweets = (ListView) view.findViewById(R.id.lvTweets);
         lvTweets.setAdapter(aTweets);
+
+        swipeContainer = (SwipeRefreshLayout)view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTimeline();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         return view;
     }
@@ -48,4 +64,6 @@ public class TweetsListFragment extends Fragment {
     public void addTweet(Tweet tweet) {
         aTweets.add(tweet);
     }
+
+    protected abstract void refreshTimeline();
 }

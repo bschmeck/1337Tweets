@@ -2,12 +2,10 @@ package com.codepath.apps.my1337tweets.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.codepath.apps.my1337tweets.R;
 import com.codepath.apps.my1337tweets.TwitterApplication;
 import com.codepath.apps.my1337tweets.TwitterClient;
 import com.codepath.apps.my1337tweets.models.EndlessScrollListener;
@@ -25,7 +23,6 @@ import java.util.List;
  */
 public class HomeTimelineFragment extends TweetsListFragment {
     private TwitterClient client;
-    private SwipeRefreshLayout swipeContainer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,18 +45,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
             }
         });
 
-        swipeContainer = (SwipeRefreshLayout)view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshTimeline();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-        android.R.color.holo_green_light,
-        android.R.color.holo_orange_light,
-        android.R.color.holo_red_light);
+
 
         return view;
     }
@@ -78,11 +64,10 @@ public class HomeTimelineFragment extends TweetsListFragment {
         });
     }
 
-    private void refreshTimeline() {
+    protected void refreshTimeline() {
         client.clearSeenTweets();
         clearTweets();
         populateTimeline();
-        swipeContainer.setRefreshing(false);
     }
 
     private void addTweets(List<Tweet> returnedTweets) {
