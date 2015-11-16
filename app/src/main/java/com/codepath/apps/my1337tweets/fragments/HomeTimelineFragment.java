@@ -70,6 +70,5 @@ public class HomeTimelineFragment extends TweetsListFragment {
             client.seenTweetId(t.getUid());
             addTweet(t);
         }
-        // aTweets.notifyDataSetChanged();
     }
 }

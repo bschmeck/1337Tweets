@@ -58,7 +58,6 @@ public class UserTimelineFragment extends TweetsListFragment {
             client.seenTweetId(t.getUid());
             addTweet(t);
         }
-        // aTweets.notifyDataSetChanged();
     }
 
     protected void refreshTimeline() {}

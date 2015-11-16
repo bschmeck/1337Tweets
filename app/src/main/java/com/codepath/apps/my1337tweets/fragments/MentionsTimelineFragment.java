@@ -49,7 +49,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
             client.seenTweetId(t.getUid());
             addTweet(t);
         }
-        // aTweets.notifyDataSetChanged();
     }
 
     protected void refreshTimeline() {}
