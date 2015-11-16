@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.codepath.apps.my1337tweets.R;
 import com.codepath.apps.my1337tweets.TweetsArrayAdapter;
+import com.codepath.apps.my1337tweets.models.EndlessScrollListener;
 import com.codepath.apps.my1337tweets.models.Tweet;
 
 import java.util.ArrayList;
@@ -31,6 +32,14 @@ public abstract class TweetsListFragment extends Fragment {
 
         lvTweets = (ListView) view.findViewById(R.id.lvTweets);
         lvTweets.setAdapter(aTweets);
+
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                extendTweetList();
+                return true;
+            }
+        });
 
         swipeContainer = (SwipeRefreshLayout)view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -66,4 +75,5 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
     protected abstract void refreshTimeline();
+    protected abstract void extendTweetList();
 }

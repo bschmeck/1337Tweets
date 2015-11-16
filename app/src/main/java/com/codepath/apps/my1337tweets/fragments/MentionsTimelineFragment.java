@@ -53,4 +53,5 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     }
 
     protected void refreshTimeline() {}
+    protected void extendTweetList() {}
 }

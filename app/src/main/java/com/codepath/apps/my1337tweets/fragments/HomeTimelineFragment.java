@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.codepath.apps.my1337tweets.TwitterApplication;
 import com.codepath.apps.my1337tweets.TwitterClient;
-import com.codepath.apps.my1337tweets.models.EndlessScrollListener;
 import com.codepath.apps.my1337tweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -37,13 +36,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        lvTweets.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                populateTimeline();
-                return true;
-            }
-        });
+
 
 
 
@@ -63,6 +56,8 @@ public class HomeTimelineFragment extends TweetsListFragment {
             }
         });
     }
+
+    protected void extendTweetList() { populateTimeline(); }
 
     protected void refreshTimeline() {
         client.clearSeenTweets();

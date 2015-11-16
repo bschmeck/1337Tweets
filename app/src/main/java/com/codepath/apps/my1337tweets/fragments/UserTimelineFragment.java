@@ -62,4 +62,5 @@ public class UserTimelineFragment extends TweetsListFragment {
     }
 
     protected void refreshTimeline() {}
+    protected void extendTweetList() {}
 }
