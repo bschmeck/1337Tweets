@@ -44,6 +44,10 @@ public class HomeTimelineFragment extends TweetsListFragment {
 
     protected void extendTweetList() { populateTimeline(); }
 
+    public void refresh() {
+        refreshTimeline();
+    }
+
     protected void refreshTimeline() {
         client.clearSeenTweets();
         clearTweets();

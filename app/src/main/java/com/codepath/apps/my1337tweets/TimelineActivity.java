@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -24,13 +23,16 @@ public class TimelineActivity extends AppCompatActivity {
 
     private static final int COMPOSE_REQUEST_CODE = 50;
     private TwitterClient client;
+    private ViewPager viewPager;
+    private TweetsPagerAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), TimelineActivity.this));
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        fragmentAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), TimelineActivity.this);
+        viewPager.setAdapter(fragmentAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -76,7 +78,9 @@ public class TimelineActivity extends AppCompatActivity {
             client.sendTweet(tweetBody, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    //refreshTimeline();
+                    viewPager.setCurrentItem(0);
+                    HomeTimelineFragment frag = (HomeTimelineFragment)fragmentAdapter.getRegisteredFragment(0);
+                    frag.refresh();
                     Toast.makeText(TimelineActivity.this, "Tweet Sent", Toast.LENGTH_SHORT).show();
                 }
 
@@ -88,7 +92,7 @@ public class TimelineActivity extends AppCompatActivity {
         }
     }
 
-    public class TweetsPagerAdapter extends FragmentPagerAdapter{
+    public class TweetsPagerAdapter extends SmartFragmentStatePagerAdapter {
         private String tabTitles[] = { "Home", "Mentions" };
         private Context context;
 
