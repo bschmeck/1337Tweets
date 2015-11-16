@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.scribe.builder.api.Api;
@@ -24,8 +25,8 @@ import org.scribe.builder.api.TwitterApi;
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
 	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "bx7VZZp2UKivEVUAixLv5U8jp";       // Change this
-	public static final String REST_CONSUMER_SECRET = "07OawSxzWaKAKZyWYjmyaXbr40WCEMrLw6oHuNRP9OgIXmu0ck"; // Change this
+	public static final String REST_CONSUMER_KEY = "VbPEmG8XL7lQu0glZPzA8NIDf";       // Change this
+	public static final String REST_CONSUMER_SECRET = "Vg45uyyADGFL0lf7pLWVcblxYTpt7RhlNdDT9loIRIHaHsKbwQ"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://my1337tweets"; // Change this (here and in manifest)
 
     public static final int TWEET_COUNT = 25;
@@ -74,6 +75,13 @@ public class TwitterClient extends OAuthBaseClient {
 
     public void clearSeenTweets() {
         oldestSeenTweetId = Long.MAX_VALUE;
+    }
+
+    public void getMentionsTimeline(JsonHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", TWEET_COUNT);
+        getClient().get(apiUrl, params, handler);
     }
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
