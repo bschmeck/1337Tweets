@@ -53,11 +53,11 @@ public class UserTimelineFragment extends TweetsListFragment {
 
     private void addTweets(List<Tweet> returnedTweets) {
         for (Tweet t : returnedTweets) {
-            client.seenTweetId(t.getUid());
+            client.seenUserTimelineTweetId(t.getUid());
             addTweet(t);
         }
     }
 
     protected void refreshTimeline() {}
-    protected void extendTweetList() {}
+    protected void extendTweetList() { populateTimeline(); }
 }

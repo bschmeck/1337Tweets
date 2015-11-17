@@ -10,6 +10,8 @@ import com.loopj.android.http.RequestParams;
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
+import java.util.HashMap;
+
 /*
  * 
  * This is the object responsible for communicating with a REST API. 
@@ -31,10 +33,14 @@ public class TwitterClient extends OAuthBaseClient {
 
     public static final int TWEET_COUNT = 25;
 
-    private long oldestSeenTweetId = Long.MAX_VALUE;
+    private HashMap<String, Long> oldestSeenTweetIds;
 
     public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
+        oldestSeenTweetIds = new HashMap<>();
+        oldestSeenTweetIds.put("home_timeline", Long.MAX_VALUE);
+        oldestSeenTweetIds.put("mentions_timeline", Long.MAX_VALUE);
+        oldestSeenTweetIds.put("user_timeline", Long.MAX_VALUE);
 	}
 
 	// CHANGE THIS
@@ -52,13 +58,18 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count", TWEET_COUNT);
 		params.put("since_id", 1);
-        if (oldestSeenTweetIdIsSet()) {
-            params.put("max_id", oldestSeenTweetId - 1);
+        if (oldestHomeTimelineTweetIdIsSet()) {
+            params.put("max_id", getOldestHomeTimelineTweetId() - 1);
         }
         getClient().get(apiUrl, params, handler);
 	}
 
-    public boolean oldestSeenTweetIdIsSet() { return oldestSeenTweetId  != Long.MAX_VALUE; }
+    public long getOldestHomeTimelineTweetId() { return oldestSeenTweetIds.get("home_timeline"); }
+    public boolean oldestHomeTimelineTweetIdIsSet() { return getOldestHomeTimelineTweetId()  != Long.MAX_VALUE; }
+    public long getOldestMentionsTweetId() { return oldestSeenTweetIds.get("mentions_timeline"); }
+    public boolean oldestMentionsTweetIdIsSet() { return getOldestMentionsTweetId()  != Long.MAX_VALUE; }
+    public long getOldestUserTimelineTweetId() { return oldestSeenTweetIds.get("user_timeline"); }
+    public boolean oldestUserTimelineTweetIdIsSet() { return getOldestUserTimelineTweetId()  != Long.MAX_VALUE; }
 
     public void sendTweet(String tweetBody, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/update.json");
@@ -67,20 +78,39 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(apiUrl, params, handler);
     }
 
-    public void seenTweetId(long tweetId) {
-        if (tweetId < oldestSeenTweetId) {
-            oldestSeenTweetId = tweetId;
+    public void seenHomeTimelineTweetId(long tweetId) {
+        if (tweetId < getOldestHomeTimelineTweetId()) {
+            oldestSeenTweetIds.put("home_timeline", tweetId);
+        }
+    }
+    public void seenUserTimelineTweetId(long tweetId) {
+        if (tweetId < getOldestUserTimelineTweetId()) {
+            oldestSeenTweetIds.put("user_timeline", tweetId);
+        }
+    }
+    public void seenMentionsTweetId(long tweetId) {
+        if (tweetId < getOldestMentionsTweetId()) {
+            oldestSeenTweetIds.put("mentions_timeline", tweetId);
         }
     }
 
-    public void clearSeenTweets() {
-        oldestSeenTweetId = Long.MAX_VALUE;
+    public void clearSeenHomeTimelineTweets() {
+        oldestSeenTweetIds.put("home_timeline", Long.MAX_VALUE);
+    }
+    public void clearSeenUserTimelineTweets() {
+        oldestSeenTweetIds.put("user_timeline", Long.MAX_VALUE);
+    }
+    public void clearSeenMentionsTweets() {
+        oldestSeenTweetIds.put("mentions_timeline", Long.MAX_VALUE);
     }
 
     public void getMentionsTimeline(JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
         RequestParams params = new RequestParams();
         params.put("count", TWEET_COUNT);
+        if (oldestMentionsTweetIdIsSet()) {
+            params.put("max_id", getOldestMentionsTweetId() - 1);
+        }
         getClient().get(apiUrl, params, handler);
     }
 
@@ -89,6 +119,9 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("count", TWEET_COUNT);
         params.put("screen_name", screenName);
+        if (oldestUserTimelineTweetIdIsSet()) {
+            params.put("max_id", getOldestUserTimelineTweetId() - 1);
+        }
         getClient().get(apiUrl, params, handler);
     }
 

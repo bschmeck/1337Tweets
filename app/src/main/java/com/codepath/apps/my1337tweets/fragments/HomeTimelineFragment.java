@@ -49,14 +49,14 @@ public class HomeTimelineFragment extends TweetsListFragment {
     }
 
     protected void refreshTimeline() {
-        client.clearSeenTweets();
+        client.clearSeenHomeTimelineTweets();
         clearTweets();
         populateTimeline();
     }
 
     private void addTweets(List<Tweet> returnedTweets) {
         for (Tweet t : returnedTweets) {
-            client.seenTweetId(t.getUid());
+            client.seenHomeTimelineTweetId(t.getUid());
             addTweet(t);
         }
     }
